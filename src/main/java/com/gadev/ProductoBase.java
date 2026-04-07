@@ -58,11 +58,11 @@ public abstract class ProductoBase {
     }
 
     protected double calcularImpuesto(){
-        return precioBase * getCategoria().getImpuesto();
+        return Math.round(precioBase * categoria.getImpuesto() * 100.0) / 100.0;
     }
 
     protected double getPrecioConImpuesto() {
-        return precioBase + calcularImpuesto();
+        return Math.round((precioBase + calcularImpuesto()) * 100.0) / 100.0;
     }
 
     @Override

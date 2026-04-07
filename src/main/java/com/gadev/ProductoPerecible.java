@@ -27,12 +27,12 @@ public class ProductoPerecible extends Producto {
             precioConImpuesto = precioConImpuesto * 0.80; // 20% de descuento
         }
 
-        return precioConImpuesto;
+        return Math.round(precioConImpuesto * 100.0) / 100.0;
     }
 
     @Override
     public String toString(){
         return super.toString() +
-                "Fecha de vencimiento: " + getFechaVencimiento();
+                ", Fecha de vencimiento: " + getFechaVencimiento();
     }
 }
