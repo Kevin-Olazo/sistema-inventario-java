@@ -64,4 +64,14 @@ public abstract class ProductoBase {
     protected double getPrecioConImpuesto() {
         return precioBase + calcularImpuesto();
     }
+
+    @Override
+    public String toString() {
+        return "Producto " +
+                "ID: " + id +
+                ", Nombre: " + nombre +
+                ", Precio Base: " + precioBase +
+                ", Stock: " + stock +
+                ", Categoria: " + categoria;
+    }
 }

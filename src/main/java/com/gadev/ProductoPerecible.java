@@ -29,4 +29,10 @@ public class ProductoPerecible extends Producto {
 
         return precioConImpuesto;
     }
+
+    @Override
+    public String toString(){
+        return super.toString() +
+                "Fecha de vencimiento: " + getFechaVencimiento();
+    }
 }

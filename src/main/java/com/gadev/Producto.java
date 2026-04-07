@@ -5,9 +5,15 @@ public class Producto extends ProductoBase{
         super(id, nombre, precioBase, stock, categoria);
     }
 
-
     @Override
     public double calcularPrecioFinal() {
         return getPrecioConImpuesto();
+    }
+
+    @Override
+    public String toString(){
+        return super.toString() +
+                ", Impuesto: " + calcularImpuesto() +
+                ", Precio Final: " + calcularPrecioFinal();
     }
 }
