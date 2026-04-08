@@ -1,6 +1,6 @@
 package com.gadev;
 
-public class ProductoNoEncontradoException extends RuntimeException {
+public class ProductoNoEncontradoException extends Exception {
     public ProductoNoEncontradoException(String message) {
         super(message);
     }
