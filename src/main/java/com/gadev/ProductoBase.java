@@ -1,6 +1,6 @@
 package com.gadev;
 
-public abstract class ProductoBase {
+public abstract class ProductoBase implements ServicioStock {
     private int id;
     private String nombre;
     private double precioBase;
@@ -63,6 +63,23 @@ public abstract class ProductoBase {
 
     protected double getPrecioConImpuesto() {
         return Math.round((precioBase + calcularImpuesto()) * 100.0) / 100.0;
+    }
+
+    @Override
+    public void incrementarStock(int cantidad) {
+        if (cantidad <= 0){
+            throw new IllegalArgumentException("Error, cantidad no es un numero valido");
+        }
+
+        this.stock = this.stock + cantidad;
+    }
+
+    @Override
+    public void disminuirStock(int cantidad) throws StockInsuficienteException {
+        if (cantidad > this.stock){
+            throw new StockInsuficienteException("No hay suficiente stock");
+        }
+        this.stock = this.stock - cantidad;
     }
 
     @Override
