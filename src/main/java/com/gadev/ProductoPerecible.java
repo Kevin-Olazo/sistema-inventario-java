@@ -15,6 +15,10 @@ public class ProductoPerecible extends Producto {
         return fechaVencimiento;
     }
 
+    public boolean isExpired(){
+        return fechaVencimiento.isBefore(LocalDate.now());
+    }
+
     @Override
     public double calcularPrecioFinal() {
         double precioConImpuesto = getPrecioConImpuesto();
