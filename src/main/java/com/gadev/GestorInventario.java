@@ -46,6 +46,12 @@ public class GestorInventario {
         return inventario.obtenerTodos();
     }
 
+    public List<ProductoBase> filtrarPorCategoria(Categoria categoria){
+        return inventario.obtenerTodos().stream()
+                .filter(productoBase -> productoBase.getCategoria().equals(categoria))
+                .toList();
+    }
+
     public void registrarNuevoProducto(ProductoBase producto){
         inventario.agregar(producto);
     }
