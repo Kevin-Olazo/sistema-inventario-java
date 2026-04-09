@@ -34,7 +34,7 @@ public class GestorInventario {
                 .sum();
     }
 
-    public Optional<ProductoBase> buscarPorNombre(String nombre) {
+    public Optional<ProductoBase> buscarPorNombre(String nombre) throws ProductoNoEncontradoException {
 
         return inventario.obtenerTodos().stream()
                 .filter(productoBase -> productoBase.getNombre().toLowerCase().contains(nombre.toLowerCase()))
