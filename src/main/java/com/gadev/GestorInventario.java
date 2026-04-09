@@ -42,4 +42,12 @@ public class GestorInventario {
 
     }
 
+    public List<ProductoBase> listarTodos(){
+        return inventario.obtenerTodos();
+    }
+
+    public void registrarNuevoProducto(ProductoBase producto){
+        inventario.agregar(producto);
+    }
+
 }
