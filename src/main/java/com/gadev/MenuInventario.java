@@ -1,6 +1,7 @@
 package com.gadev;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class MenuInventario {
@@ -31,7 +32,7 @@ public class MenuInventario {
                     agregarProducto();
                     break;
                 case 2:
-                    System.out.println("2 ");
+                    realizarVenta();
                     break;
                 case 3:
                     listarProductos();
@@ -107,12 +108,40 @@ public class MenuInventario {
             return;
         }
 
-
         gestorInventario.registrarNuevoProducto(nuevoProducto);
-        System.out.println("Producto agregado con exito!");
+        System.out.println("Producto agregado con éxito!");
+    }
 
 
+    public void realizarVenta(){
+        System.out.print("Ingrese el nombre del producto que desea vender: ");
+        String nombre = scanner.nextLine();
 
+        try {
+            Optional<ProductoBase> productoBase = gestorInventario.buscarPorNombre(nombre);
+            if (productoBase.isPresent()){
+                System.out.println("Stock actual: " + productoBase.get().getStock());
+                System.out.print("Ingrese la cantidad que desea vender: ");
+                int cantidadVenta = Integer.parseInt(scanner.nextLine());
+                productoBase.get().disminuirStock(cantidadVenta);
+            } else{
+                System.out.println("Producto no encontrado");
+            }
+        } catch (ProductoNoEncontradoException e){
+            System.out.println("Error: " + e.getMessage());
+        } catch (StockInsuficienteException ex){
+            System.out.println("No hay suficiente stock.");
+        }
+
+        System.out.println("Venta realizada exitosamente!");
+
+    }
+
+
+    public void listarProductos(){
+        for(ProductoBase pb : gestorInventario.listarTodos()){
+            System.out.println(pb.toString());
+        }
     }
 
     public int elegirOpcion() {
@@ -125,12 +154,6 @@ public class MenuInventario {
         }
 
         return comando;
-    }
-
-    public void listarProductos(){
-        for(ProductoBase pb : gestorInventario.listarTodos()){
-            System.out.println(pb.toString());
-        }
     }
 
     public void printMenu() {
