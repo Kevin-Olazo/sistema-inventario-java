@@ -42,6 +42,17 @@ public class GestorInventario {
 
     }
 
+
+    public ProductoBase buscarPorId(int id) throws ProductoNoEncontradoException {
+        return inventario.buscarPorId(id)
+                .orElseThrow(() -> new ProductoNoEncontradoException("Producto con ID " + id + " no encontrado"));
+    }
+
+    public boolean existeProducto(int id){
+        return inventario.buscarPorId(id).isPresent();
+    }
+
+
     public List<ProductoBase> listarTodos(){
         return inventario.obtenerTodos();
     }
