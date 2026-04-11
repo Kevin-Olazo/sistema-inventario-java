@@ -71,8 +71,17 @@ public class MenuInventario {
         int tipoEleccion = Integer.parseInt(scanner.nextLine());
 
         // 2. Pedir datos comunes
-        System.out.print("Ingrese id: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        int id;
+        while (true) {
+            System.out.println("Ingrese id: ");
+            id = Integer.parseInt(scanner.nextLine());
+
+            if (gestorInventario.existeProducto(id)) {
+                System.out.println("Ya existe un producto registrado con el ID " + id + ". Ingrese uno diferente");
+            } else {
+                break;
+            }
+        }
 
         System.out.print("Ingrese Nombre: ");
         String nombre = scanner.nextLine();
@@ -84,7 +93,6 @@ public class MenuInventario {
         int stock = Integer.parseInt(scanner.nextLine());
 
         ProductoBase nuevoProducto;
-
 
         if (tipoEleccion == 1) {
             Categoria categoria = null;
@@ -203,7 +211,7 @@ public class MenuInventario {
     public void printMenuReportes(){
         System.out.println("1. Ver todos los productos");
         System.out.println("2. Ver productos con bajo stock");
-        System.out.println("3. Ver productos perecibles VENCIDOS");
+        System.out.println("3. Ver productos perecibles Vencidos");
         System.out.println("4. Ver productos por categoria");
         System.out.print("Elige una opción: ");
         int comando = Integer.parseInt(scanner.nextLine());
@@ -220,8 +228,8 @@ public class MenuInventario {
     }
 
     public void agregarDatosPrueba(){
-        // Genera 30 productos de prueba
-        // Vamos 10 productos por bloque
+        // 30 productos de prueba
+
 
         ProductoBase p1 = new Producto(1, "Laptop", 999.99, 10, Categoria.ELECTRONICA);
         ProductoBase p2 = new Producto(2, "Smartphone", 499.99, 20, Categoria.ELECTRONICA);
@@ -254,11 +262,21 @@ public class MenuInventario {
         ProductoBase p29 = new Producto(29, "Falda", 39.99, 30, Categoria.VESTUARIO);
         ProductoBase p30 = new Producto(30, "Suéter", 59.99, 25, Categoria.VESTUARIO);
 
-        Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,
-                p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,
-                p21, p22, p23, p24, p25, p26, p27, p28, p29, p30)
-                .forEach(gestorInventario::registrarNuevoProducto);
+        // Agrega productos vencidos
+        ProductoBase p31 = new ProductoPerecible(31, "Leche Vencida", 1.99, 100, Categoria.ALIMENTOS, LocalDate.now().minusDays(5));
+        ProductoBase p32 = new ProductoPerecible(32, "Pan Vencido", 0.99, 50, Categoria.ALIMENTOS, LocalDate.now().minusDays(2));
+        ProductoBase p33 = new ProductoPerecible(33, "Queso Vencido", 4.99, 30, Categoria.ALIMENTOS, LocalDate.now().minusDays(10));
+        ProductoBase p34 = new ProductoPerecible(34, "Yogur Vencido", 0.99, 20, Categoria.ALIMENTOS, LocalDate.now().minusDays(7));
+        ProductoBase p35 = new ProductoPerecible(35, "Carne Vencida", 9.99, 15, Categoria.ALIMENTOS, LocalDate.now().minusDays(3));
 
+        List<ProductoBase> productosPrueba = Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,
+                p11, p12, p13, p14, p15, p16, p17, p18, p19, p20,
+                p21, p22, p23, p24, p25, p26, p27, p28, p29, p30,
+                p31, p32, p33, p34, p35);
+
+        for (ProductoBase p : productosPrueba) {
+            gestorInventario.registrarNuevoProducto(p);
+        }
 
     }
 }
