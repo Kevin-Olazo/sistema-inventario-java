@@ -48,7 +48,7 @@ public class MenuInventario {
                     printMenuReportes();
                     break;
                 case 6:
-                    //mostrarEstadisticas();
+                    mostrarEstadisticas();
                     break;
                 case 7:
                     continuar = false;
@@ -148,19 +148,19 @@ public class MenuInventario {
     public void buscarProductoPorNombre(){
         System.out.print("Ingrese el nombre: ");
         String nombre = scanner.nextLine();
-        try {
+
             Optional<ProductoBase> resultado = gestorInventario.buscarPorNombre(nombre);
             if (resultado.isPresent()){
                 System.out.println(resultado.get());
             } else {
                 System.out.println("No existe");
             }
-        } catch (ProductoNoEncontradoException e){
-            System.out.println("Error: " + e.getMessage());
-        }
 
     }
 
+    public void mostrarEstadisticas(){
+        System.out.println("Total inventario: $" +gestorInventario.calcularValorTotalInventario()  );
+    }
 
     public void realizarVenta() {
         System.out.print("Ingrese el nombre del producto que desea vender: ");
@@ -175,9 +175,7 @@ public class MenuInventario {
                 productoBase.get().disminuirStock(cantidadVenta);
                 System.out.println("Venta realizada exitosamente!");
             }
-        } catch (ProductoNoEncontradoException e) {
-            System.out.println("Error: " + e.getMessage());
-        } catch (StockInsuficienteException ex) {
+        }catch (StockInsuficienteException ex) {
             System.out.println("No hay suficiente stock.");
         }
 
@@ -210,6 +208,17 @@ public class MenuInventario {
             case 3: printListaCategoria(gestorInventario.filtrarPorCategoria(Categoria.VESTUARIO)); break;
             default:
                 System.out.println("Elige una categoria valida (1-3)");
+        }
+    }
+
+    public void verProductosBajoStock(){
+        System.out.print("Ingrese un limite de bajo stock: ");
+        int limite = Integer.parseInt(scanner.nextLine());
+        List<ProductoBase> lista = gestorInventario.generarReporteBajoStock(limite);
+        if(!lista.isEmpty()){
+            for (ProductoBase p : lista){
+                System.out.println(p);
+            }
         }
     }
 
@@ -252,7 +261,7 @@ public class MenuInventario {
 
         switch (comando){
             case 1: listarProductos();break;
-            // case 2: verProductosBajoStock(); break;
+            case 2: verProductosBajoStock(); break;
             case 3: listarProductosVencidos(); break;
             case 4: listarProductosCategoria();break;
             default:
