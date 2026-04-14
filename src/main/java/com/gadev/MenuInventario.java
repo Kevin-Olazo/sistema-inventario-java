@@ -25,6 +25,7 @@ public class MenuInventario {
         int comando = 0;
 
         agregarDatosPrueba();
+        listarProductos();
 
         while (continuar) {
             printMenu();
@@ -35,19 +36,19 @@ public class MenuInventario {
                     agregarProducto();
                     break;
                 case 2:
-                    realizarVenta();
+                    agregarStock();
                     break;
                 case 3:
-                    listarProductos();
+                    realizarVenta();
                     break;
                 case 4:
-                    System.out.println("4 ");
+                    buscarProductoPorNombre();
                     break;
                 case 5:
                     printMenuReportes();
                     break;
                 case 6:
-                    System.out.println("5 ");
+                    //mostrarEstadisticas();
                     break;
                 case 7:
                     continuar = false;
@@ -59,6 +60,7 @@ public class MenuInventario {
         }
     }
 
+    // 1. Agregar producto
     public void agregarProducto() {
         ingresarDatosProducto();
     }
@@ -126,6 +128,39 @@ public class MenuInventario {
         System.out.println("Producto agregado con éxito!");
     }
 
+    public void agregarStock(){
+        System.out.print("Ingrese el ID del producto a agregar stock");
+        int id = Integer.parseInt(scanner.nextLine());
+        try {
+            ProductoBase p = gestorInventario.buscarPorId(id);
+            if (p != null){
+                System.out.println("Stock actual - " + p.getStock());
+                System.out.print("Ingrese stock a agregar:");
+                int stock = Integer.parseInt(scanner.nextLine());
+                p.incrementarStock(stock);
+                System.out.println("Nuevo stock: " + p.getStock());
+            }
+        } catch (ProductoNoEncontradoException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void buscarProductoPorNombre(){
+        System.out.print("Ingrese el nombre: ");
+        String nombre = scanner.nextLine();
+        try {
+            Optional<ProductoBase> resultado = gestorInventario.buscarPorNombre(nombre);
+            if (resultado.isPresent()){
+                System.out.println(resultado.get());
+            } else {
+                System.out.println("No existe");
+            }
+        } catch (ProductoNoEncontradoException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+
+    }
+
 
     public void realizarVenta() {
         System.out.print("Ingrese el nombre del producto que desea vender: ");
@@ -147,7 +182,6 @@ public class MenuInventario {
         }
 
     }
-
 
     public void listarProductos() {
         for (ProductoBase pb : gestorInventario.listarTodos()) {
