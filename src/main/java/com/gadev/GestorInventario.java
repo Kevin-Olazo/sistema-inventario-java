@@ -16,7 +16,7 @@ public class GestorInventario {
 
     public List<ProductoBase> generarReporteBajoStock(int limite) {
         return inventario.obtenerTodos().stream()
-                .filter(productoBase -> productoBase.getStock() < limite)
+                .filter(productoBase -> productoBase.getStock() <= limite)
                 .toList();
     }
 
@@ -29,12 +29,13 @@ public class GestorInventario {
     }
 
     public double calcularValorTotalInventario() {
-        return inventario.obtenerTodos().stream()
+        double total = inventario.obtenerTodos().stream()
                 .mapToDouble(p -> p.calcularPrecioFinal() * p.getStock())
                 .sum();
+        return Math.round(total * 100.0) / 100.0;
     }
 
-    public Optional<ProductoBase> buscarPorNombre(String nombre) throws ProductoNoEncontradoException {
+    public Optional<ProductoBase> buscarPorNombre(String nombre) {
         return inventario.obtenerTodos().stream()
                 .filter(productoBase -> productoBase.getNombre().equalsIgnoreCase(nombre))
                 .findFirst();
