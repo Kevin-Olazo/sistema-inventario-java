@@ -35,11 +35,14 @@ public class GestorInventario {
     }
 
     public Optional<ProductoBase> buscarPorNombre(String nombre) throws ProductoNoEncontradoException {
-
         return inventario.obtenerTodos().stream()
-                .filter(productoBase -> productoBase.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .filter(productoBase -> productoBase.getNombre().equalsIgnoreCase(nombre))
                 .findFirst();
+    }
 
+    public ProductoBase obtenerParaVenta(String nombre) throws ProductoNoEncontradoException {
+        return buscarPorNombre(nombre)
+                .orElseThrow(() -> new ProductoNoEncontradoException("Producto con nombre '" + nombre + "' no encontrado"));
     }
 
 
