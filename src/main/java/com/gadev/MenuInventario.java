@@ -70,13 +70,12 @@ public class MenuInventario {
         System.out.println("Que tipo de producto desea agregar?");
         System.out.println("1. Producto regular");
         System.out.println("2. Producto perecible");
-        int tipoEleccion = Integer.parseInt(scanner.nextLine());
+        int tipoEleccion = pedirNumeroEntero("Ingrese el tipo de producto (1-2): ");
 
         // 2. Pedir datos comunes
         int id;
         while (true) {
-            System.out.println("Ingrese id: ");
-            id = Integer.parseInt(scanner.nextLine());
+            id = pedirNumeroEntero("Ingrese id: ");
 
             if (gestorInventario.existeProducto(id)) {
                 System.out.println("Ya existe un producto registrado con el ID " + id + ". Ingrese uno diferente");
@@ -91,8 +90,7 @@ public class MenuInventario {
         System.out.print("Ingrese Precio: ");
         double precioBase = Double.parseDouble(scanner.nextLine());
 
-        System.out.print("Ingrese Stock: ");
-        int stock = Integer.parseInt(scanner.nextLine());
+        int stock = pedirNumeroEntero("Ingrese Stock: ");
 
         ProductoBase nuevoProducto;
 
@@ -101,9 +99,7 @@ public class MenuInventario {
             System.out.println("Categorías: ");
             System.out.println("1. Electronica");
             System.out.println("2. Vestuario");
-            System.out.print("Elige una categoria: ");
-
-            int tipoCategoria = Integer.parseInt(scanner.nextLine());
+            int tipoCategoria = pedirNumeroEntero("Elige una categoria: ");
             switch (tipoCategoria) {
                 case 1:
                     categoria = Categoria.ELECTRONICA;
@@ -129,14 +125,12 @@ public class MenuInventario {
     }
 
     public void agregarStock() {
-        System.out.print("Ingrese el ID del producto a agregar stock");
-        int id = Integer.parseInt(scanner.nextLine());
+        int id = pedirNumeroEntero("Ingrese el ID del producto a agregar stock");
         try {
             ProductoBase p = gestorInventario.buscarPorId(id);
             if (p != null) {
                 System.out.println("Stock actual - " + p.getStock());
-                System.out.print("Ingrese stock a agregar:");
-                int stock = Integer.parseInt(scanner.nextLine());
+                int stock = pedirNumeroEntero("Ingrese stock a agregar:");
                 p.incrementarStock(stock);
                 System.out.println("Nuevo stock: " + p.getStock());
             }
@@ -170,14 +164,13 @@ public class MenuInventario {
             ProductoBase producto = gestorInventario.obtenerParaVenta(nombre);
 
             System.out.println("Stock actual: " + producto.getStock());
-            System.out.print("Ingrese la cantidad que desea vender: ");
-            int cantidadVenta = Integer.parseInt(scanner.nextLine());
+            int cantidadVenta = pedirNumeroEntero("Ingrese la cantidad que desea vender: ");
 
             producto.disminuirStock(cantidadVenta);
             System.out.println("Venta realizada exitosamente!");
 
         } catch (ProductoNoEncontradoException e) {
-            throw new RuntimeException(e);
+            System.out.println("Aviso: " + e.getMessage());
         } catch (StockInsuficienteException ex) {
             System.out.println("No hay suficiente stock.");
         }
@@ -202,7 +195,7 @@ public class MenuInventario {
         System.out.println("2. Alimentos");
         System.out.println("3. Vestuario");
 
-        int categoriaEleccion = Integer.parseInt(scanner.nextLine());
+        int categoriaEleccion = pedirNumeroEntero("Elige una categoria: ");
 
         switch (categoriaEleccion) {
             case 1:
@@ -220,8 +213,7 @@ public class MenuInventario {
     }
 
     public void verProductosBajoStock() {
-        System.out.print("Ingrese un limite de bajo stock: ");
-        int limite = Integer.parseInt(scanner.nextLine());
+        int limite = pedirNumeroEntero("Ingrese un limite de bajo stock: ");
         List<ProductoBase> lista = gestorInventario.generarReporteBajoStock(limite);
         if (!lista.isEmpty()) {
             for (ProductoBase p : lista) {
@@ -231,15 +223,7 @@ public class MenuInventario {
     }
 
     public int elegirOpcion() {
-        int comando = 0;
-        System.out.print("Elige una opción: ");
-        try {
-            comando = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Ingrese un valor numérico");
-        }
-
-        return comando;
+        return pedirNumeroEntero("Elige una opción: ");
     }
 
     public void printListaCategoria(List<ProductoBase> productos) {
@@ -264,8 +248,7 @@ public class MenuInventario {
         System.out.println("2. Ver productos con bajo stock");
         System.out.println("3. Ver productos perecibles Vencidos");
         System.out.println("4. Ver productos por categoria");
-        System.out.print("Elige una opción: ");
-        int comando = Integer.parseInt(scanner.nextLine());
+        int comando = pedirNumeroEntero("Elige una opción: ");
 
         switch (comando) {
             case 1:
@@ -284,6 +267,17 @@ public class MenuInventario {
                 System.out.println("Elige una opción valida (1-3)");
         }
 
+    }
+
+    public int pedirNumeroEntero(String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Por favor, ingrese solo caracteres numéricos.");
+            }
+        }
     }
 
     public void agregarDatosPrueba() {
