@@ -128,12 +128,12 @@ public class MenuInventario {
         System.out.println("Producto agregado con éxito!");
     }
 
-    public void agregarStock(){
+    public void agregarStock() {
         System.out.print("Ingrese el ID del producto a agregar stock");
         int id = Integer.parseInt(scanner.nextLine());
         try {
             ProductoBase p = gestorInventario.buscarPorId(id);
-            if (p != null){
+            if (p != null) {
                 System.out.println("Stock actual - " + p.getStock());
                 System.out.print("Ingrese stock a agregar:");
                 int stock = Integer.parseInt(scanner.nextLine());
@@ -145,21 +145,21 @@ public class MenuInventario {
         }
     }
 
-    public void buscarProductoPorNombre(){
+    public void buscarProductoPorNombre() {
         System.out.print("Ingrese el nombre: ");
         String nombre = scanner.nextLine();
 
-            Optional<ProductoBase> resultado = gestorInventario.buscarPorNombre(nombre);
-            if (resultado.isPresent()){
-                System.out.println(resultado.get());
-            } else {
-                System.out.println("No existe");
-            }
+        Optional<ProductoBase> resultado = gestorInventario.buscarPorNombre(nombre);
+        if (resultado.isPresent()) {
+            System.out.println(resultado.get());
+        } else {
+            System.out.println("No existe");
+        }
 
     }
 
-    public void mostrarEstadisticas(){
-        System.out.println("Total inventario: $" +gestorInventario.calcularValorTotalInventario()  );
+    public void mostrarEstadisticas() {
+        System.out.println("Total inventario: $" + gestorInventario.calcularValorTotalInventario());
     }
 
     public void realizarVenta() {
@@ -167,19 +167,22 @@ public class MenuInventario {
         String nombre = scanner.nextLine();
 
         try {
-            Optional<ProductoBase> productoBase = gestorInventario.buscarPorNombre(nombre);
-            if (productoBase.isPresent()) {
-                System.out.println("Stock actual: " + productoBase.get().getStock());
-                System.out.print("Ingrese la cantidad que desea vender: ");
-                int cantidadVenta = Integer.parseInt(scanner.nextLine());
-                productoBase.get().disminuirStock(cantidadVenta);
-                System.out.println("Venta realizada exitosamente!");
-            }
-        }catch (StockInsuficienteException ex) {
+            ProductoBase producto = gestorInventario.obtenerParaVenta(nombre);
+
+            System.out.println("Stock actual: " + producto.getStock());
+            System.out.print("Ingrese la cantidad que desea vender: ");
+            int cantidadVenta = Integer.parseInt(scanner.nextLine());
+
+            producto.disminuirStock(cantidadVenta);
+            System.out.println("Venta realizada exitosamente!");
+
+        } catch (ProductoNoEncontradoException e) {
+            throw new RuntimeException(e);
+        } catch (StockInsuficienteException ex) {
             System.out.println("No hay suficiente stock.");
         }
-
     }
+
 
     public void listarProductos() {
         for (ProductoBase pb : gestorInventario.listarTodos()) {
@@ -187,13 +190,13 @@ public class MenuInventario {
         }
     }
 
-    public void listarProductosVencidos(){
-        for(ProductoPerecible p : gestorInventario.listarSoloPereciblesVencidos()){
+    public void listarProductosVencidos() {
+        for (ProductoPerecible p : gestorInventario.listarSoloPereciblesVencidos()) {
             System.out.println(p.toString());
         }
     }
 
-    public void listarProductosCategoria(){
+    public void listarProductosCategoria() {
         System.out.println("Categorías: ");
         System.out.println("1. Electrónicos");
         System.out.println("2. Alimentos");
@@ -201,22 +204,27 @@ public class MenuInventario {
 
         int categoriaEleccion = Integer.parseInt(scanner.nextLine());
 
-        switch (categoriaEleccion){
+        switch (categoriaEleccion) {
             case 1:
-                printListaCategoria(gestorInventario.filtrarPorCategoria(Categoria.ELECTRONICA)); break;
-            case 2: printListaCategoria(gestorInventario.filtrarPorCategoria(Categoria.ALIMENTOS)); break;
-            case 3: printListaCategoria(gestorInventario.filtrarPorCategoria(Categoria.VESTUARIO)); break;
+                printListaCategoria(gestorInventario.filtrarPorCategoria(Categoria.ELECTRONICA));
+                break;
+            case 2:
+                printListaCategoria(gestorInventario.filtrarPorCategoria(Categoria.ALIMENTOS));
+                break;
+            case 3:
+                printListaCategoria(gestorInventario.filtrarPorCategoria(Categoria.VESTUARIO));
+                break;
             default:
                 System.out.println("Elige una categoria valida (1-3)");
         }
     }
 
-    public void verProductosBajoStock(){
+    public void verProductosBajoStock() {
         System.out.print("Ingrese un limite de bajo stock: ");
         int limite = Integer.parseInt(scanner.nextLine());
         List<ProductoBase> lista = gestorInventario.generarReporteBajoStock(limite);
-        if(!lista.isEmpty()){
-            for (ProductoBase p : lista){
+        if (!lista.isEmpty()) {
+            for (ProductoBase p : lista) {
                 System.out.println(p);
             }
         }
@@ -234,8 +242,8 @@ public class MenuInventario {
         return comando;
     }
 
-    public void printListaCategoria(List<ProductoBase> productos){
-        for(ProductoBase p : productos){
+    public void printListaCategoria(List<ProductoBase> productos) {
+        for (ProductoBase p : productos) {
             System.out.println(p.toString());
         }
 
@@ -251,7 +259,7 @@ public class MenuInventario {
         System.out.println("7. Salir");
     }
 
-    public void printMenuReportes(){
+    public void printMenuReportes() {
         System.out.println("1. Ver todos los productos");
         System.out.println("2. Ver productos con bajo stock");
         System.out.println("3. Ver productos perecibles Vencidos");
@@ -259,21 +267,27 @@ public class MenuInventario {
         System.out.print("Elige una opción: ");
         int comando = Integer.parseInt(scanner.nextLine());
 
-        switch (comando){
-            case 1: listarProductos();break;
-            case 2: verProductosBajoStock(); break;
-            case 3: listarProductosVencidos(); break;
-            case 4: listarProductosCategoria();break;
+        switch (comando) {
+            case 1:
+                listarProductos();
+                break;
+            case 2:
+                verProductosBajoStock();
+                break;
+            case 3:
+                listarProductosVencidos();
+                break;
+            case 4:
+                listarProductosCategoria();
+                break;
             default:
                 System.out.println("Elige una opción valida (1-3)");
         }
 
     }
 
-    public void agregarDatosPrueba(){
+    public void agregarDatosPrueba() {
         // 30 productos de prueba
-
-
         ProductoBase p1 = new Producto(1, "Laptop", 999.99, 10, Categoria.ELECTRONICA);
         ProductoBase p2 = new Producto(2, "Smartphone", 499.99, 20, Categoria.ELECTRONICA);
         ProductoBase p3 = new Producto(3, "Tablet", 299.99, 15, Categoria.ELECTRONICA);
@@ -282,7 +296,7 @@ public class MenuInventario {
         ProductoBase p6 = new Producto(6, "Ropa", 39.99, 30, Categoria.VESTUARIO);
         ProductoBase p7 = new Producto(7, "Zapatos", 79.99, 20, Categoria.VESTUARIO);
         ProductoBase p8 = new Producto(8, "Chaqueta", 59.99, 10, Categoria.VESTUARIO);
-        ProductoBase p9 = new Producto(9, "Camisa", 29.99   , 50, Categoria.VESTUARIO);
+        ProductoBase p9 = new Producto(9, "Camisa", 29.99, 50, Categoria.VESTUARIO);
         ProductoBase p10 = new Producto(10, "Pantalones", 49.99, 40, Categoria.VESTUARIO);
         ProductoBase p11 = new ProductoPerecible(11, "Leche", 1.99, 100, Categoria.ALIMENTOS, LocalDate.now().plusDays(5));
         ProductoBase p12 = new ProductoPerecible(12, "Pan", 0.99, 50, Categoria.ALIMENTOS, LocalDate.now().plusDays(2));
